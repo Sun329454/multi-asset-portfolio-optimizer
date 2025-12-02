@@ -43,7 +43,7 @@
 
 ## Key Steps
 
-1. **Data Acquisition**: Download daily closing prices from 2015-2025 uding `yfinance`.
+1. **Data Acquisition**: Download daily closing prices from 2015-2025 using `yfinance`.
 2. **Data Cleaning and Preprocessing**: Handle missing values, calculate daily and monthly log returns.
 3. **Exploratory Data Analysis**: Plot -> Price Trends, Return Distributions, Correlation Heatmap.
 4. **Mean-Variance Optimization**: Formulate the objective, set the constraints, solve using cvxpy quadratic programming.

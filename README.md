@@ -1,4 +1,8 @@
-# Multi-Asset Allocation Project
+# Multi-Asset Allocation Project 
+
+# (Undergoing large-scale maintenance!!!)
+
+- Updates: Integrate Market neutral strategy and Black-Litterman model
 
 ## Project Overview
 

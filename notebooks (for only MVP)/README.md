@@ -21,3 +21,4 @@ This directory contains the Google Colab notebooks for the Multi-Asset Portfolio
 
 - The data folder contains the raw and processed data used in the notebooks.
 - The plots generated during the model's run are saved in the `plots/` directory.
+- The result is saved in the `result` directory.

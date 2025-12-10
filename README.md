@@ -11,10 +11,10 @@ multi-asset-portfolio-optimizer/
 ├── notebooks (Upgrade for more optimizers)/
 │ ├── data/
 │ │ └── spy_prices.csv
-│ ├── Advanced_Mean_Variance_Optimisation.ipynb
-│ ├── Black_Litterman_Model.ipynb
-│ ├── Hierarchical_Risk_Parity.ipynb
-│ └── Risk_Return_Model.ipynb
+│ ├── Advanced_Mean_Variance_Optimisation.py
+│ ├── Black_Litterman_Model.py
+│ ├── Hierarchical_Risk_Parity.py
+│ └── Risk_Return_Model.py
 │
 └── notebooks (for only MVP)/
 ├── data/
@@ -25,11 +25,11 @@ multi-asset-portfolio-optimizer/
 │ └── multiasset_ewc.csv
 ├── reports/
 │ └── README.md
-├── Backtesting.ipynb
-├── DataAcquisition_&_Preprocessing.ipynb
-├── Extensions_Dashboard.ipynb
-├── Final_Model.ipynb
-└── Portfolio_Optimization.ipynb
+├── Backtesting.py
+├── DataAcquisition_&_Preprocessing.py
+├── Extensions_Dashboard.py
+├── Final_Model.py
+└── Portfolio_Optimization.py
 ```
 
 ## Repository Overview

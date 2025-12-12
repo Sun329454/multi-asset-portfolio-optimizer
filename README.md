@@ -1,71 +1,226 @@
-# Multi-Asset Portfolio Optimizer
+# Portfolio Optimisation Toolkit
 
-The **multi-asset-portfolio-optimizer** repository provides a collection of notebooks for portfolio optimization using different strategies, including traditional and advanced methods. It contains both a **Mean-Variance Portfolio (MVP)** version and an **Upgraded version** with advanced optimization techniques. This repository helps in optimizing multi-asset portfolios, evaluating various strategies, and backtesting the models.
+A reusable Python toolkit for portfolio construction and optimisation, refactored from
+research notebooks into a clean, modular codebase.
 
-## Directory Structure
+This repository covers **classical and advanced portfolio optimisation methods**, including:
+
+- Mean–Variance Optimisation (MVO)
+- Black–Litterman model
+- Hierarchical Risk Parity (HRP)
+- Custom convex and non-convex objectives
+- Empirical comparison of risk and return estimators
+
+The project is designed to be:
+- **Research-friendly** (easy to prototype new objectives and constraints)
+- **Reusable** (library code separated from demos)
+- **Extensible** (new models slot into a clear structure)
+
+---
+
+## Repository Structure
+
+```text
+.
+├── src/portfolio/              # Reusable library code
+│   ├── data/                   # Data loading (yfinance, CSV)
+│   ├── estimators.py           # Expected return & risk estimators
+│   ├── objectives.py           # Custom optimisation objectives
+│   ├── constraints.py          # Portfolio constraints (e.g. sector bounds)
+│   ├── optimizers/
+│   │   ├── mvo.py              # Mean–Variance optimisation
+│   │   ├── black_litterman.py  # Black–Litterman model
+│   │   └── hrp.py              # Hierarchical Risk Parity
+│   └── utils/
+│       ├── types.py            # Standard result objects
+│       └── plotting.py         # Lightweight visualisation helpers
+│
+├── examples/                   # Runnable demo scripts
+│   ├── mvo_basic.py
+│   ├── advanced_objectives.py
+│   ├── black_litterman_demo.py
+│   ├── hrp_demo.py
+│   └── risk_return_models.py
+│
+├── tests/                      # Minimal tests / smoke checks
+├── pyproject.toml              # Dependencies & packaging
+└── README.md
 ```
-multi-asset-portfolio-optimizer/
-│
-├── README.md
-│
-├── notebooks (Upgrade for more optimizers)/
-│ ├── data/
-│ │ └── spy_prices.csv
-│ ├── Advanced_Mean_Variance_Optimisation.ipynb
-│ ├── Black_Litterman_Model.ipynb
-│ ├── Hierarchical_Risk_Parity.ipynb
-│ └── Risk_Return_Model.ipynb
-│
-└── notebooks (for only MVP)/
-├── data/
-│ ├── multiasset_benchmark.csv
-│ ├── multiasset_closing_prices.csv
-│ ├── multiasset_cum_returns.csv
-│ ├── multiasset_daily_returns.csv
-│ └── multiasset_ewc.csv
-├── reports/
-│ └── README.md
-├── Backtesting.ipynb
-├── DataAcquisition_&_Preprocessing.ipynb
-├── Extensions_Dashboard.ipynb
-├── Final_Model.ipynb
-└── Portfolio_Optimization.ipynb
+
+---
+
+## Core Concepts
+
+### 1. Separation of Concerns
+
+The codebase deliberately separates:
+
+- **Library code** (`src/portfolio/`):
+  - No plotting by default
+  - No hard-coded data paths
+  - Functions return structured results
+
+- **Examples** (`examples/`):
+  - Demonstrate how to use the library
+  - Perform plotting and printing
+  - Equivalent to former research notebooks
+
+This makes it easy to reuse the optimisation logic in new projects, papers, or backtests.
+
+---
+
+### 2. Unified Optimisation Output
+
+All optimisers return a common result object:
+
+```python
+OptimizationResult(
+    weights: pd.Series,
+    cleaned_weights: Optional[pd.Series],
+    performance: dict,
+    meta: Optional[dict],
+)
 ```
 
-## Repository Overview
+This ensures:
+- Consistent downstream analysis
+- Easy comparison across models
+- Cleaner experiment code
 
-This repository is divided into two main sections based on the complexity and functionality:
+---
 
-### 1. **Mean-Variance Portfolio (MVP)**
+## Implemented Methods
 
-The MVP implementation follows Harry Markowitz's mean-variance optimization theory to construct an optimal portfolio based on the expected return and risk (variance). This section contains the following key components:
+### Mean–Variance Optimisation (MVO)
 
-- **DataAcquisition_&_Preprocessing.ipynb**: A notebook for acquiring and preprocessing financial data.
-- **Portfolio_Optimization.ipynb**: The core notebook for applying the mean-variance optimization to build the portfolio.
-- **Final_Model.ipynb**: The final implementation of the MVP model.
-- **Backtesting.ipynb**: A notebook for backtesting the performance of the portfolio.
-- **Extensions_Dashboard.ipynb**: A notebook to extend the dashboard functionality for better visualization and analysis.
-- **data/**: Contains multiple CSV files for multi-asset data, including benchmark data, closing prices, cumulative returns, daily returns, and economic weightings (EWC).
-- **reports/**: Contains a `README.md` for reporting purposes related to MVP.
+Located in `optimizers/mvo.py`:
 
-### 2. **Upgraded Optimization Models**
+- Minimum volatility
+- Maximum Sharpe ratio (with optional L2 regularisation)
+- Efficient risk (target volatility)
+- Market-neutral portfolios
+- Flexible bounds and constraints
 
-This section includes more sophisticated optimization techniques and models. The following notebooks provide advanced strategies for optimizing multi-asset portfolios:
+Risk and return estimation methods include:
+- Historical mean / EMA / CAPM returns
+- Sample covariance
+- Ledoit–Wolf shrinkage
+- Exponential covariance
+- Semi-covariance
 
-- **Advanced_Mean_Variance_Optimisation.ipynb**: A notebook for advanced mean-variance optimization.
-- **Black_Litterman_Model.ipynb**: A notebook implementing the Black-Litterman model.
-- **Hierarchical_Risk_Parity.ipynb**: A notebook for implementing the hierarchical risk parity approach.
-- **Risk_Return_Model.ipynb**: A notebook focusing on risk-return modeling.
-- **data/**: Contains `spy_prices.csv` with SPY price data for the optimization models.
+---
 
-## Usage
+### Black–Litterman Model
 
-1. Navigate to the notebooks (for only MVP) directory to begin with the mean-variance portfolio optimization and backtesting.
-2. Explore the advanced optimization models in the notebooks (Upgrade for more optimizers) directory for more complex methods.
+Located in `optimizers/black_litterman.py`:
 
-## Notes
-- Each section includes its own data directory with CSV files tailored for the specific optimization method.
-- The repository includes no traditional configuration files like .gitignore, requirements.txt, or config.yaml, so make sure to manually manage dependencies if needed.
+- Market-implied priors
+- Absolute views with optional confidence (Idzorek method)
+- Posterior return and covariance estimation
+- Portfolio optimisation on posterior beliefs
 
-## Contributions
-Feel free to fork the repository and contribute to improving the optimization models. Pull requests and suggestions are welcome.
+The design cleanly separates:
+- Market data
+- Investor views
+- Optimisation step
+
+---
+
+### Hierarchical Risk Parity (HRP)
+
+Located in `optimizers/hrp.py`:
+
+- Hierarchical clustering–based allocation
+- Robust to estimation error
+- Optional discrete allocation step
+
+---
+
+### Advanced / Custom Objectives
+
+Located in `objectives.py` and `examples/advanced_objectives.py`:
+
+- Custom convex objectives (e.g. log-barrier terms)
+- Non-convex objectives solved via `scipy.optimize`
+- Risk-parity-style deviation objectives
+
+These are intended for **research and experimentation**, not production guarantees.
+
+---
+
+## Risk & Return Model Evaluation
+
+Located in `risk_return_eval.py`:
+
+- Train/test split of price history
+- Empirical comparison of:
+  - Risk models (via covariance error)
+  - Return models (via forecast error)
+
+Useful for:
+- Model selection
+- Methodological research
+- Understanding estimator behaviour out-of-sample
+
+---
+
+## Installation
+
+```bash
+python -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -e .
+```
+
+---
+
+## Running Examples
+
+```bash
+python examples/mvo_basic.py
+python examples/advanced_objectives.py
+python examples/black_litterman_demo.py
+python examples/hrp_demo.py
+
+# Risk/return estimator comparison from CSV data
+python examples/risk_return_models.py --prices-csv data/stock_prices.csv
+```
+
+Examples use `yfinance` by default and require network access.
+
+---
+
+## Design Philosophy
+
+This repository intentionally avoids:
+- Notebook-specific code (`get_ipython`, inline installs)
+- Hard-coded paths or assumptions
+- Mixing visualisation with optimisation logic
+
+Instead, it aims to provide:
+- Clear abstractions
+- Minimal but expressive APIs
+- A solid base for further research or production work
+
+---
+
+## Disclaimer
+
+This project is for **research and educational purposes**.
+It is not financial advice, nor a production-ready trading system.
+
+---
+
+## Possible Extensions
+
+- Factor-based optimisation
+- ESG or regulatory constraints
+- Robust optimisation techniques
+- Transaction cost and turnover control
+- Backtesting and simulation layer
+
+---
+
+## Author
+
+Refactored and structured from original research code by the repository owner.

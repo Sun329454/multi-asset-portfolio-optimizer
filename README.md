@@ -218,9 +218,3 @@ It is not financial advice, nor a production-ready trading system.
 - Robust optimisation techniques
 - Transaction cost and turnover control
 - Backtesting and simulation layer
-
----
-
-## Author
-
-Refactored and structured from original research code by the repository owner.
